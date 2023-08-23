@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.dataGrid = new Tekla.Structures.Dialog.UIControls.DataGrid();
+            this.FilterOr = new System.Windows.Forms.Button();
             this.FilterAnd = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,33 +44,33 @@
             this.dataGrid.Size = new System.Drawing.Size(474, 222);
             this.dataGrid.TabIndex = 0;
             // 
+            // FilterOr
+            // 
+            this.FilterOr.Location = new System.Drawing.Point(252, 240);
+            this.FilterOr.Name = "FilterOr";
+            this.FilterOr.Size = new System.Drawing.Size(234, 53);
+            this.FilterOr.TabIndex = 1;
+            this.FilterOr.Text = "Filter \"OR\"";
+            this.FilterOr.UseVisualStyleBackColor = true;
+            this.FilterOr.Click += new System.EventHandler(this.FilterOr_Click);
+            // 
             // FilterAnd
             // 
-            this.FilterAnd.Location = new System.Drawing.Point(252, 240);
+            this.FilterAnd.Location = new System.Drawing.Point(12, 240);
             this.FilterAnd.Name = "FilterAnd";
             this.FilterAnd.Size = new System.Drawing.Size(234, 53);
-            this.FilterAnd.TabIndex = 1;
-            this.FilterAnd.Text = "Filter \"OR\"";
+            this.FilterAnd.TabIndex = 2;
+            this.FilterAnd.Text = "Filter \"AND\"";
             this.FilterAnd.UseVisualStyleBackColor = true;
-            this.FilterAnd.Click += new System.EventHandler(this.FilterOr_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(12, 240);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(234, 53);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Filter \"AND\"";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.FilterAnd_Click);
+            this.FilterAnd.Click += new System.EventHandler(this.FilterAnd_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(499, 301);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(492, 302);
             this.Controls.Add(this.FilterAnd);
+            this.Controls.Add(this.FilterOr);
             this.Controls.Add(this.dataGrid);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -85,8 +85,8 @@
         #endregion
 
         private Tekla.Structures.Dialog.UIControls.DataGrid dataGrid;
+        private System.Windows.Forms.Button FilterOr;
         private System.Windows.Forms.Button FilterAnd;
-        private System.Windows.Forms.Button button1;
     }
 }
 

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
+using Tekla.Structures;
 using Tekla.Structures.Filtering;
 using Tekla.Structures.Filtering.Categories;
 using Tekla.Structures.Model;
 using Tekla.Structures.Model.UI;
 using ModelObjectSelector = Tekla.Structures.Model.UI.ModelObjectSelector;
+
 
 namespace FilteringApp
 {
@@ -15,6 +18,7 @@ namespace FilteringApp
     {
         private string filterName;
         private readonly DataTable selectionTable = new DataTable();
+
         public Form1()
         {
             this.InitializeComponent();
@@ -41,43 +45,51 @@ namespace FilteringApp
                     continue;
                 }
 
-                var ht = new Hashtable();
-                part.GetAllUserProperties(ref ht);
+                dt.Rows.Add("MATERIAL", part.Material.MaterialString);
+                dt.Rows.Add("NAME", part.Name.ToString());
 
-                var enumerator = ht.GetEnumerator();
-                while (enumerator.MoveNext())
+                var hashTable = new Hashtable();
+                part.GetAllUserProperties(ref hashTable);
+
+                var hashTableEnumerator = hashTable.GetEnumerator();
+                while (hashTableEnumerator.MoveNext())
                 {
 
-                    if (enumerator.Key.ToString().Contains("initial_GUID"))
+                    if (hashTableEnumerator.Key.ToString().Contains("initial_GUID"))
                     {
                         continue;
                     }
 
-                    if (enumerator.Key.ToString().Contains("FIRE_RATING"))
+                    if (hashTableEnumerator.Key.ToString().Contains("initial_profile"))
                     {
                         continue;
                     }
 
-                    if (enumerator.Key.ToString().Contains("RFI"))
+                    if (hashTableEnumerator.Key.ToString().Contains("FIRE_RATING"))
                     {
-                        if (enumerator.Key.ToString().Contains("RFIcombined"))
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("RFI"))
+                    {
+                        if (hashTableEnumerator.Key.ToString().Contains("RFIcombined"))
                         {
-                            dt.Rows.Add(enumerator.Key, enumerator.Value);
+                            dt.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
                         }
                         continue;
                     }
 
-                    if (enumerator.Value.ToString() == "0")
+                    if (hashTableEnumerator.Value.ToString() == "0")
                     {
                         continue;
                     }
 
-                    if (enumerator.Value.ToString() == "-2147483648")
+                    if (hashTableEnumerator.Value.ToString() == "-2147483648")
                     {
                         continue;
                     }
 
-                    dt.Rows.Add(enumerator.Key, enumerator.Value);
+                    dt.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
                 }
             }
 
@@ -89,7 +101,7 @@ namespace FilteringApp
             this.dataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dataGrid.AllowUserToAddRows = false;
             this.dataGrid.ReadOnly = true;
-            this.dataGrid.ColumnHeadersVisible = false;
+            this.dataGrid.ColumnHeadersVisible = true;
         }
 
         public void CreateFilter(string filterName, BinaryFilterOperatorType type)
@@ -146,6 +158,33 @@ namespace FilteringApp
             this.CreateFilter(this.filterName, BinaryFilterOperatorType.BOOLEAN_AND);
             this.ChangeRepresentation(this.filterName);
             this.selectionTable.Clear();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            var mos = new ModelObjectSelector();
+            var moe = mos.GetSelectedObjects();
+
+            var parts = new List<Identifier>();
+            while (moe.MoveNext())
+            {
+                var part = moe.Current as ModelObject;
+                if (part == null)
+                {
+                    continue;
+                }
+
+                var id = part.Identifier;
+                parts.Add(id);
+            }
+
+            ModelObjectVisualization.SetTransparencyForAll(TemporaryTransparency.HIDDEN);
+            ModelObjectVisualization.SetTransparency(parts, TemporaryTransparency.VISIBLE);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            ModelObjectVisualization.ClearAllTemporaryStates();
         }
     }
 }
