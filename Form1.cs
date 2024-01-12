@@ -14,12 +14,12 @@ using ModelObjectSelector = Tekla.Structures.Model.UI.ModelObjectSelector;
 
 namespace FilteringApp
 {
-    public partial class Form1 : Form
+    public partial class FilteringApp : Form
     {
         private string filterName;
         private readonly DataTable selectionTable = new DataTable();
 
-        public Form1()
+        public FilteringApp()
         {
             this.InitializeComponent();
         }
@@ -54,7 +54,6 @@ namespace FilteringApp
                 var hashTableEnumerator = hashTable.GetEnumerator();
                 while (hashTableEnumerator.MoveNext())
                 {
-
                     if (hashTableEnumerator.Key.ToString().Contains("initial_GUID"))
                     {
                         continue;
@@ -66,6 +65,46 @@ namespace FilteringApp
                     }
 
                     if (hashTableEnumerator.Key.ToString().Contains("FIRE_RATING"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("PRELIM_MARK"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("SDNF_MEMBER_NUMBER"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("proIfcEntityOvrd"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("proIfcEntityPreDef"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("ENVIRONMENT"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("USE"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("EN1090_EXC_PART"))
+                    {
+                        continue;
+                    }
+
+                    if (hashTableEnumerator.Key.ToString().Contains("OUTPUT_ZONE"))
                     {
                         continue;
                     }
@@ -186,5 +225,54 @@ namespace FilteringApp
         {
             ModelObjectVisualization.ClearAllTemporaryStates();
         }
+
+        private void CopyNameToComment_Click(object sender, EventArgs e)
+        {
+            var mos = new ModelObjectSelector();
+            var moe = mos.GetSelectedObjects();
+            var partsToSelelect = new ArrayList();
+
+            while (moe.MoveNext())
+            {
+                var part = moe.Current as Part;
+                if (part == null)
+                {
+                    continue;
+                }
+
+                var name = part.Name;
+                part.SetUserProperty("comment", name);
+                mos.Select(new ArrayList() { part }, false);
+                partsToSelelect.Add(part);
+            }
+
+            mos.Select(partsToSelelect, false);
+        }
+
+        private void CopyCommentToProductWebSite_Click(object sender, EventArgs e)
+        {
+            var mos = new ModelObjectSelector();
+            var moe = mos.GetSelectedObjects();
+            var partsToSelelect = new ArrayList();
+
+            while (moe.MoveNext())
+            {
+                var part = moe.Current as Part;
+                if (part == null)
+                {
+                    continue;
+                }
+
+                var comment = string.Empty;
+                part.GetReportProperty("comment", ref comment);
+
+                part.SetUserProperty("PRODUCT_WEBSITE", comment);
+                mos.Select(new ArrayList() { part }, false);
+                partsToSelelect.Add(part);
+            }
+
+            mos.Select(partsToSelelect, false);
+        }
     }
 }
+

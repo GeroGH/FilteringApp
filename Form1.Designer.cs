@@ -1,6 +1,6 @@
 ﻿namespace FilteringApp
 {
-    partial class Form1
+    partial class FilteringApp
     {
         /// <summary>
         /// Required designer variable.
@@ -64,17 +64,18 @@
             this.FilterAnd.UseVisualStyleBackColor = true;
             this.FilterAnd.Click += new System.EventHandler(this.FilterAnd_Click);
             // 
-            // Form1
+            // FilteringApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(492, 302);
+            this.ClientSize = new System.Drawing.Size(492, 299);
             this.Controls.Add(this.FilterAnd);
             this.Controls.Add(this.FilterOr);
             this.Controls.Add(this.dataGrid);
-            this.Name = "Form1";
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Name = "FilteringApp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "FilteringApp";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
