@@ -14,7 +14,8 @@ namespace FilteringApp
 {
     public partial class FilteringApp : Form
     {
-        private readonly string filterName = "FiteringAppFilterGG";
+        private string FilterName = string.Empty;
+        private string ModelFolder = string.Empty;
         private DataTable modelTable = new DataTable();
         private DataTable selectionTable = new DataTable();
 
@@ -25,6 +26,11 @@ namespace FilteringApp
 
         private void FilerForm_Load(object sender, EventArgs e)
         {
+            this.FilterName = "FiteringAppFilterGG";
+
+            var model = new Model();
+            this.ModelFolder = model.GetInfo().ModelPath;
+
             this.modelTable.Columns.Add("Name", typeof(string));
             this.modelTable.Columns.Add("Value", typeof(string));
 
@@ -155,8 +161,8 @@ namespace FilteringApp
         private void Execute(BinaryFilterOperatorType binaryOperator)
         {
             this.CollectSelectedRows();
-            this.CreateFilter(this.filterName, binaryOperator);
-            this.ChangeRepresentation(this.filterName);
+            this.CreateFilter(this.FilterName, binaryOperator);
+            this.ChangeRepresentation(this.FilterName);
         }
         private void CollectSelectedRows()
         {
@@ -184,7 +190,7 @@ namespace FilteringApp
             }
 
             var Filter = new Filter(collection);
-            var fileName = Path.Combine(@".\attributes", filterName);
+            var fileName = Path.Combine(this.ModelFolder, @".\attributes", filterName);
             Filter.CreateFile(FilterExpressionFileType.OBJECT_GROUP_VIEW, fileName);
             //Filter.CreateFile(FilterExpressionFileType.OBJECT_GROUP_SELECTION, fileName);
         }
@@ -217,7 +223,7 @@ namespace FilteringApp
 
         private void ReuseOldFilter_Click(object sender, EventArgs e)
         {
-            this.ChangeRepresentation(this.filterName);
+            this.ChangeRepresentation(this.FilterName);
         }
 
         private void TexBoxUserInput_TextChanged(object sender, EventArgs e)
