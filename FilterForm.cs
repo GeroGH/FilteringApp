@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Tekla.Structures.Filtering;
@@ -26,6 +27,9 @@ namespace FilteringApp
 
         private void FilerForm_Load(object sender, EventArgs e)
         {
+            var currentFormLocation = this.Location;
+            this.Location = new Point(currentFormLocation.X + -650, currentFormLocation.Y - 200);
+
             this.FilterName = "FiteringAppFilterGG";
 
             var model = new Model();
@@ -48,6 +52,7 @@ namespace FilteringApp
                 }
 
                 this.modelTable.Rows.Add("MATERIAL", part.Material.MaterialString);
+                this.modelTable.Rows.Add("FINISH", part.Finish.ToString());
                 this.modelTable.Rows.Add("NAME", part.Name.ToString());
 
                 var materialType = string.Empty;
