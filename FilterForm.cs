@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -15,30 +16,28 @@ namespace FilteringApp
 {
     public partial class FilteringApp : Form
     {
-        private string FilterName = string.Empty;
+        private readonly string FilterName = "FiteringAppFilterGG";
         private string ModelFolder = string.Empty;
-        private DataTable modelTable = new DataTable();
-        private DataTable selectionTable = new DataTable();
+        private DataTable ModelTable = new DataTable();
+        private DataTable SelectionTable = new DataTable();
+        private List<Part> Parts = new List<Part>();
+        private List<BoltGroup> BoltGroups = new List<BoltGroup>();
 
         public FilteringApp()
         {
             this.InitializeComponent();
+
+            var model = new Model();
+            this.ModelFolder = model.GetInfo().ModelPath;
         }
 
         private void FilerForm_Load(object sender, EventArgs e)
         {
             var currentFormLocation = this.Location;
-            this.Location = new Point(currentFormLocation.X + -650, currentFormLocation.Y - 200);
+            this.Location = new Point(currentFormLocation.X + 600, currentFormLocation.Y - 200);
 
-            this.FilterName = "FiteringAppFilterGG";
-
-            var model = new Model();
-            this.ModelFolder = model.GetInfo().ModelPath;
-
-            this.modelTable.Columns.Add("Name", typeof(string));
-            this.modelTable.Columns.Add("Value", typeof(string));
-
-            this.selectionTable = this.modelTable.Clone();
+            this.ModelTable.Columns.Add("Name", typeof(string));
+            this.ModelTable.Columns.Add("Value", typeof(string));
 
             var mos = new ModelObjectSelector();
             var moe = mos.GetSelectedObjects();
@@ -46,18 +45,30 @@ namespace FilteringApp
             while (moe.MoveNext())
             {
                 var part = moe.Current as Part;
-                if (part == null)
+                if (part != null)
                 {
+                    this.Parts.Add(part);
                     continue;
                 }
 
-                this.modelTable.Rows.Add("MATERIAL", part.Material.MaterialString);
-                this.modelTable.Rows.Add("FINISH", part.Finish.ToString());
-                this.modelTable.Rows.Add("NAME", part.Name.ToString());
+                var boltGroup = moe.Current as BoltGroup;
+                if (boltGroup != null)
+                {
+                    this.BoltGroups.Add(boltGroup);
+                    continue;
+                }
+            }
+
+            foreach (var part in this.Parts)
+            {
+                this.ModelTable.Rows.Add("MATERIAL", part.Material.MaterialString);
+                this.ModelTable.Rows.Add("FINISH", part.Finish.ToString());
+                this.ModelTable.Rows.Add("NAME", part.Name.ToString());
 
                 var materialType = string.Empty;
                 part.GetReportProperty("MATERIAL_TYPE", ref materialType);
-                this.modelTable.Rows.Add("MATERIAL_TYPE", materialType);
+
+                this.ModelTable.Rows.Add("MATERIAL_TYPE", materialType);
 
                 var hashTable = new Hashtable();
                 part.GetStringUserProperties(ref hashTable);
@@ -129,7 +140,7 @@ namespace FilteringApp
                     {
                         if (hashTableEnumerator.Key.ToString().Contains("RFIcombined"))
                         {
-                            this.modelTable.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
+                            this.ModelTable.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
                         }
                         continue;
                     }
@@ -144,14 +155,23 @@ namespace FilteringApp
                         continue;
                     }
 
-                    this.modelTable.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
+                    this.ModelTable.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
                 }
             }
 
-            this.modelTable = this.modelTable.DefaultView.ToTable(true);
-            this.modelTable.DefaultView.Sort = "Name, Value";
+            foreach (var boltGroup in this.BoltGroups)
+            {
+                var standard = string.Empty;
+                boltGroup.GetReportProperty("BOLT_STANDARD", ref standard);
+                this.ModelTable.Rows.Add("BOLT_STANDARD", standard);
+            }
 
-            this.dataGrid.DataSource = this.modelTable;
+            this.ModelTable = this.ModelTable.DefaultView.ToTable(true);
+            this.ModelTable.DefaultView.Sort = "Name, Value";
+
+            this.SelectionTable = this.ModelTable.Clone();
+
+            this.dataGrid.DataSource = this.ModelTable;
             this.dataGrid.RowHeadersVisible = false;
             this.dataGrid.AllowUserToResizeRows = false;
             this.dataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -171,13 +191,13 @@ namespace FilteringApp
         }
         private void CollectSelectedRows()
         {
-            this.selectionTable.Clear();
+            this.SelectionTable.Clear();
             var selectedRows = this.dataGrid.SelectedRows;
             foreach (DataGridViewRow row in selectedRows)
             {
                 var name = row.Cells[0].Value.ToString();
                 var value = row.Cells[1].Value.ToString();
-                this.selectionTable.Rows.Add(name, value);
+                this.SelectionTable.Rows.Add(name, value);
             }
         }
 
@@ -185,7 +205,7 @@ namespace FilteringApp
         {
             var collection = new BinaryFilterExpressionCollection();
 
-            foreach (DataRow row in this.selectionTable.Rows)
+            foreach (DataRow row in this.SelectionTable.Rows)
             {
                 var template = new TemplateFilterExpressions.CustomString(row["Name"].ToString());
                 var value = new StringConstantFilterExpression($"\"{row["Value"]}\"");
@@ -197,7 +217,6 @@ namespace FilteringApp
             var Filter = new Filter(collection);
             var fileName = Path.Combine(this.ModelFolder, @".\attributes", filterName);
             Filter.CreateFile(FilterExpressionFileType.OBJECT_GROUP_VIEW, fileName);
-            //Filter.CreateFile(FilterExpressionFileType.OBJECT_GROUP_SELECTION, fileName);
         }
 
         private void ChangeRepresentation(string representation)
@@ -233,7 +252,7 @@ namespace FilteringApp
 
         private void TexBoxUserInput_TextChanged(object sender, EventArgs e)
         {
-            this.modelTable.DefaultView.RowFilter = string.Format($"[Name] LIKE '%{this.TexBoxUserInput.Text}%' OR [Value] LIKE '%{this.TexBoxUserInput.Text}%'");
+            this.ModelTable.DefaultView.RowFilter = string.Format($"[Name] LIKE '%{this.TexBoxUserInput.Text}%' OR [Value] LIKE '%{this.TexBoxUserInput.Text}%'");
         }
     }
 }

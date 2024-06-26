@@ -49,6 +49,8 @@
             // 
             // FilterOr
             // 
+            this.FilterOr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FilterOr.ForeColor = System.Drawing.Color.Firebrick;
             this.FilterOr.Location = new System.Drawing.Point(411, 265);
             this.FilterOr.Name = "FilterOr";
             this.FilterOr.Size = new System.Drawing.Size(135, 53);
@@ -59,6 +61,8 @@
             // 
             // FilterAnd
             // 
+            this.FilterAnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.FilterAnd.ForeColor = System.Drawing.Color.DodgerBlue;
             this.FilterAnd.Location = new System.Drawing.Point(411, 206);
             this.FilterAnd.Name = "FilterAnd";
             this.FilterAnd.Size = new System.Drawing.Size(135, 53);
@@ -69,11 +73,12 @@
             // 
             // ReuseOldFilter
             // 
+            this.ReuseOldFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ReuseOldFilter.Location = new System.Drawing.Point(411, 12);
             this.ReuseOldFilter.Name = "ReuseOldFilter";
             this.ReuseOldFilter.Size = new System.Drawing.Size(135, 53);
             this.ReuseOldFilter.TabIndex = 3;
-            this.ReuseOldFilter.Text = "Reuse Old Filter";
+            this.ReuseOldFilter.Text = "Reuse Filter";
             this.ReuseOldFilter.UseVisualStyleBackColor = true;
             this.ReuseOldFilter.Click += new System.EventHandler(this.ReuseOldFilter_Click);
             // 
@@ -98,7 +103,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FilteringApp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilteringApp 2024.06.12a";
+            this.Text = "FilteringApp 2024.06.26a";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FilerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
