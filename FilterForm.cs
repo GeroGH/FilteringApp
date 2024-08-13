@@ -34,7 +34,7 @@ namespace FilteringApp
         private void FilerForm_Load(object sender, EventArgs e)
         {
             var currentFormLocation = this.Location;
-            this.Location = new Point(currentFormLocation.X + 600, currentFormLocation.Y - 200);
+            this.Location = new Point(currentFormLocation.X + 610, currentFormLocation.Y - 200);
 
             this.ModelTable.Columns.Add("Name", typeof(string));
             this.ModelTable.Columns.Add("Value", typeof(string));
@@ -67,8 +67,11 @@ namespace FilteringApp
 
                 var materialType = string.Empty;
                 part.GetReportProperty("MATERIAL_TYPE", ref materialType);
-
                 this.ModelTable.Rows.Add("MATERIAL_TYPE", materialType);
+
+                var status = string.Empty;
+                part.GetReportProperty("ASSY_STATUS", ref status);
+                this.ModelTable.Rows.Add("ASSY_STATUS", status);
 
                 var hashTable = new Hashtable();
                 part.GetStringUserProperties(ref hashTable);
