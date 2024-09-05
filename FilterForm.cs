@@ -64,6 +64,7 @@ namespace FilteringApp
                 this.ModelTable.Rows.Add("MATERIAL", part.Material.MaterialString);
                 this.ModelTable.Rows.Add("FINISH", part.Finish.ToString());
                 this.ModelTable.Rows.Add("NAME", part.Name.ToString());
+                this.ModelTable.Rows.Add("CLASS_ATTR", part.Class);
 
                 var materialType = string.Empty;
                 part.GetReportProperty("MATERIAL_TYPE", ref materialType);
