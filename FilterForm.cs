@@ -74,6 +74,10 @@ namespace FilteringApp
                 part.GetReportProperty("ASSY_STATUS", ref status);
                 this.ModelTable.Rows.Add("ASSY_STATUS", status);
 
+                var profileType = string.Empty;
+                part.GetReportProperty("PROFILE_TYPE", ref profileType);
+                this.ModelTable.Rows.Add("PROFILE_TYPE", profileType);
+
                 var hashTable = new Hashtable();
                 part.GetStringUserProperties(ref hashTable);
 
@@ -165,9 +169,13 @@ namespace FilteringApp
 
             foreach (var boltGroup in this.BoltGroups)
             {
-                var standard = string.Empty;
-                boltGroup.GetReportProperty("BOLT_STANDARD", ref standard);
-                this.ModelTable.Rows.Add("BOLT_STANDARD", standard);
+                var boltStandard = string.Empty;
+                boltGroup.GetReportProperty("BOLT_STANDARD", ref boltStandard);
+                this.ModelTable.Rows.Add("BOLT_STANDARD", boltStandard);
+
+                var boltComment = string.Empty;
+                boltGroup.GetReportProperty("BOLT_COMMENT", ref boltComment);
+                this.ModelTable.Rows.Add("BOLT_COMMENT", boltComment);
             }
 
             this.ModelTable = this.ModelTable.DefaultView.ToTable(true);
