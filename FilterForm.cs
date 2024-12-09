@@ -35,6 +35,7 @@ namespace FilteringApp
         {
             var currentFormLocation = this.Location;
             this.Location = new Point(currentFormLocation.X + 610, currentFormLocation.Y - 200);
+            this.Show();
 
             this.ModelTable.Columns.Add("Name", typeof(string));
             this.ModelTable.Columns.Add("Value", typeof(string));
@@ -77,6 +78,14 @@ namespace FilteringApp
                 var profileType = string.Empty;
                 part.GetReportProperty("PROFILE_TYPE", ref profileType);
                 this.ModelTable.Rows.Add("PROFILE_TYPE", profileType);
+
+                var partPrefix = string.Empty;
+                part.GetReportProperty("PART_PREFIX", ref partPrefix);
+                this.ModelTable.Rows.Add("PART_PREFIX", partPrefix);
+
+                var assemblyPrefix = string.Empty;
+                part.GetReportProperty("ASSEMBLY_PREFIX", ref assemblyPrefix);
+                this.ModelTable.Rows.Add("ASSEMBLY_PREFIX", assemblyPrefix);
 
                 var hashTable = new Hashtable();
                 part.GetStringUserProperties(ref hashTable);
