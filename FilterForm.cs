@@ -17,11 +17,13 @@ namespace FilteringApp
     public partial class FilteringApp : Form
     {
         private readonly string FilterName = "FiteringAppFilterGG";
-        private string ModelFolder = string.Empty;
+        private readonly string ModelFolder = string.Empty;
+
+        private readonly List<Part> Parts = new List<Part>();
+        private readonly List<BoltGroup> BoltGroups = new List<BoltGroup>();
+
         private DataTable ModelTable = new DataTable();
         private DataTable SelectionTable = new DataTable();
-        private List<Part> Parts = new List<Part>();
-        private List<BoltGroup> BoltGroups = new List<BoltGroup>();
 
         public FilteringApp()
         {
@@ -45,15 +47,13 @@ namespace FilteringApp
 
             while (moe.MoveNext())
             {
-                var part = moe.Current as Part;
-                if (part != null)
+                if (moe.Current is Part part)
                 {
                     this.Parts.Add(part);
                     continue;
                 }
 
-                var boltGroup = moe.Current as BoltGroup;
-                if (boltGroup != null)
+                if (moe.Current is BoltGroup boltGroup)
                 {
                     this.BoltGroups.Add(boltGroup);
                     continue;
@@ -86,6 +86,10 @@ namespace FilteringApp
                 var assemblyPrefix = string.Empty;
                 part.GetReportProperty("ASSEMBLY_PREFIX", ref assemblyPrefix);
                 this.ModelTable.Rows.Add("ASSEMBLY_PREFIX", assemblyPrefix);
+
+                var fireProduct = string.Empty;
+                part.GetReportProperty("FIRE_PRODUCT", ref fireProduct);
+                this.ModelTable.Rows.Add("FIRE_PRODUCT", fireProduct);
 
                 var hashTable = new Hashtable();
                 part.GetStringUserProperties(ref hashTable);

@@ -103,7 +103,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FilteringApp";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilteringApp 2024.12.09 a";
+            this.Text = "FilteringApp 2025.03.31 a";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FilerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
