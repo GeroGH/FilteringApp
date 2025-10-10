@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Tekla.Structures.Filtering;
 using Tekla.Structures.Filtering.Categories;
@@ -16,7 +18,7 @@ namespace FilteringApp
 {
     public partial class FilteringApp : Form
     {
-        private readonly string FilterName = "FiteringAppFilterGG";
+        private readonly string FilterName = String.Empty;
         private readonly string ModelFolder = string.Empty;
 
         private readonly List<Part> Parts = new List<Part>();
@@ -31,10 +33,18 @@ namespace FilteringApp
 
             var model = new Model();
             this.ModelFolder = model.GetInfo().ModelPath;
+
+            var userName = Environment.UserName;
+            var firstName = userName.Split('.')[0];
+            var secondName = userName.Split('.')[1];
+            var initials = char.ToUpper(firstName[0]).ToString() + char.ToUpper(secondName[0]).ToString();
+            this.FilterName = "FiteringAppFilter" + initials;
         }
 
         private void FilerForm_Load(object sender, EventArgs e)
         {
+            var stopwatch = Stopwatch.StartNew();
+
             var currentFormLocation = this.Location;
             this.Location = new Point(currentFormLocation.X + 610, currentFormLocation.Y - 200);
             this.Show();
@@ -42,23 +52,42 @@ namespace FilteringApp
             this.ModelTable.Columns.Add("Name", typeof(string));
             this.ModelTable.Columns.Add("Value", typeof(string));
 
+            this.statusBarLabel.Text = "Collecting parts from the model ...";
+
             var mos = new ModelObjectSelector();
             var moe = mos.GetSelectedObjects();
 
+            var parts = new List<Part>();
+            var bolts = new List<BoltGroup>();
+
+            var selectedModelObjects = new List<ModelObject>();
             while (moe.MoveNext())
             {
-                if (moe.Current is Part part)
+                var current = moe.Current;
+                if (current != null)
+                    selectedModelObjects.Add(current);
+            }
+
+            foreach (var modelObject in selectedModelObjects)
+            {
+                var part = modelObject as Part;
+                if (part != null)
                 {
-                    this.Parts.Add(part);
+                    parts.Add(part);
                     continue;
                 }
 
-                if (moe.Current is BoltGroup boltGroup)
+                var bolt = modelObject as BoltGroup;
+                if (bolt != null)
                 {
-                    this.BoltGroups.Add(boltGroup);
-                    continue;
+                    bolts.Add(bolt);
                 }
             }
+
+            this.Parts.AddRange(parts);
+            this.BoltGroups.AddRange(bolts);
+
+            this.statusBarLabel.Text = "Collecting user fields from the parts ...";
 
             foreach (var part in this.Parts)
             {
@@ -66,6 +95,52 @@ namespace FilteringApp
                 this.ModelTable.Rows.Add("FINISH", part.Finish.ToString());
                 this.ModelTable.Rows.Add("NAME", part.Name.ToString());
                 this.ModelTable.Rows.Add("CLASS_ATTR", part.Class);
+
+                var profileType = string.Empty;
+                part.GetReportProperty("PROFILE_TYPE", ref profileType);
+                this.ModelTable.Rows.Add("PROFILE_TYPE", profileType);
+
+                if (profileType != "B")
+                {
+                    var profile = string.Empty;
+                    part.GetReportProperty("PROFILE", ref profile);
+                    this.ModelTable.Rows.Add("PROFILE", profile);
+                }
+
+                if (profileType == "B")
+                {
+                    var sectionSize = string.Empty;
+                    part.GetReportProperty("SectionSize", ref sectionSize);
+
+                    if (sectionSize != string.Empty)
+                    {
+                        this.ModelTable.Rows.Add("SectionSize", sectionSize);
+                    }
+                }
+
+                var uf1 = string.Empty;
+                part.GetReportProperty("USER_FIELD_1", ref uf1);
+                this.ModelTable.Rows.Add("USER_FIELD_1", uf1);
+
+                var uf2 = string.Empty;
+                part.GetReportProperty("USER_FIELD_2", ref uf2);
+                this.ModelTable.Rows.Add("USER_FIELD_2", uf2);
+
+                var uf3 = string.Empty;
+                part.GetReportProperty("USER_FIELD_3", ref uf3);
+                this.ModelTable.Rows.Add("USER_FIELD_3", uf3);
+
+                var uf4 = string.Empty;
+                part.GetReportProperty("USER_FIELD_4", ref uf4);
+                this.ModelTable.Rows.Add("USER_FIELD_4", uf4);
+
+                var phaseName = string.Empty;
+                part.GetReportProperty("PHASE.NAME", ref phaseName);
+                this.ModelTable.Rows.Add("PHASE.NAME", phaseName);
+
+                var userPhase = string.Empty;
+                part.GetReportProperty("USER_PHASE", ref userPhase);
+                this.ModelTable.Rows.Add("USER_PHASE", userPhase);
 
                 var materialType = string.Empty;
                 part.GetReportProperty("MATERIAL_TYPE", ref materialType);
@@ -75,10 +150,6 @@ namespace FilteringApp
                 part.GetReportProperty("ASSY_STATUS", ref status);
                 this.ModelTable.Rows.Add("ASSY_STATUS", status);
 
-                var profileType = string.Empty;
-                part.GetReportProperty("PROFILE_TYPE", ref profileType);
-                this.ModelTable.Rows.Add("PROFILE_TYPE", profileType);
-
                 var partPrefix = string.Empty;
                 part.GetReportProperty("PART_PREFIX", ref partPrefix);
                 this.ModelTable.Rows.Add("PART_PREFIX", partPrefix);
@@ -87,6 +158,10 @@ namespace FilteringApp
                 part.GetReportProperty("ASSEMBLY_PREFIX", ref assemblyPrefix);
                 this.ModelTable.Rows.Add("ASSEMBLY_PREFIX", assemblyPrefix);
 
+                var assemblyDefaultPrefix = string.Empty;
+                part.GetReportProperty("ASSEMBLY_DEFAULT_PREFIX", ref assemblyDefaultPrefix);
+                this.ModelTable.Rows.Add("ASSEMBLY_DEFAULT_PREFIX", assemblyDefaultPrefix);
+
                 var fireProduct = string.Empty;
                 part.GetReportProperty("FIRE_PRODUCT", ref fireProduct);
                 this.ModelTable.Rows.Add("FIRE_PRODUCT", fireProduct);
@@ -94,101 +169,120 @@ namespace FilteringApp
                 var hashTable = new Hashtable();
                 part.GetStringUserProperties(ref hashTable);
 
-                var hashTableEnumerator = hashTable.GetEnumerator();
-                while (hashTableEnumerator.MoveNext())
+                foreach (DictionaryEntry entry in hashTable)
                 {
-                    if (hashTableEnumerator.Key.ToString().Contains("initial_GUID"))
+                    if (entry.Key.ToString().Contains("SectionSize"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("initial_profile"))
+                    if (entry.Key.ToString().Contains("PROFILE1"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("FIRE_RATING"))
+                    if (entry.Key.ToString().Contains("initial_GUID"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("PRELIM_MARK"))
+                    if (entry.Key.ToString().Contains("initial_profile"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("SDNF_MEMBER_NUMBER"))
+                    if (entry.Key.ToString().Contains("FIRE_RATING"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("proIfcEntityOvrd"))
+                    if (entry.Key.ToString().Contains("PRELIM_MARK"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("proIfcEntityPreDef"))
+                    if (entry.Key.ToString().Contains("SDNF_MEMBER_NUMBER"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("ENVIRONMENT"))
+                    if (entry.Key.ToString().Contains("proIfcEntityOvrd"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("USE"))
+                    if (entry.Key.ToString().Contains("proIfcEntityPreDef"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("EN1090_EXC_PART"))
+                    if (entry.Key.ToString().Contains("ENVIRONMENT"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("OUTPUT_ZONE"))
+                    if (entry.Key.ToString().Contains("USE"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("CELL_UTILIZATION"))
+                    if (entry.Key.ToString().Contains("EN1090_EXC_PART"))
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Key.ToString().Contains("RFI"))
+                    if (entry.Key.ToString().Contains("OUTPUT_ZONE"))
                     {
-                        if (hashTableEnumerator.Key.ToString().Contains("RFIcombined"))
+                        continue;
+                    }
+
+                    if (entry.Key.ToString().Contains("CELL_UTILIZATION"))
+                    {
+                        continue;
+                    }
+
+                    if (entry.Key.ToString().Contains("RFI"))
+                    {
+                        if (entry.Key.ToString().Contains("RFIcombined"))
                         {
-                            this.ModelTable.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
+                            this.ModelTable.Rows.Add(entry.Key, entry.Value);
                         }
                         continue;
                     }
 
-                    if (hashTableEnumerator.Value.ToString() == "0")
+                    if (entry.Value.ToString() == "0")
                     {
                         continue;
                     }
 
-                    if (hashTableEnumerator.Value.ToString() == "-2147483648")
+                    if (entry.Value.ToString() == "-2147483648")
                     {
                         continue;
                     }
 
-                    this.ModelTable.Rows.Add(hashTableEnumerator.Key, hashTableEnumerator.Value);
+                    this.ModelTable.Rows.Add(entry.Key, entry.Value);
                 }
             }
 
             foreach (var boltGroup in this.BoltGroups)
             {
                 var boltStandard = string.Empty;
-                boltGroup.GetReportProperty("BOLT_STANDARD", ref boltStandard);
-                this.ModelTable.Rows.Add("BOLT_STANDARD", boltStandard);
-
                 var boltComment = string.Empty;
+
+                boltGroup.GetReportProperty("BOLT_STANDARD", ref boltStandard);
                 boltGroup.GetReportProperty("BOLT_COMMENT", ref boltComment);
+
+                this.ModelTable.Rows.Add("BOLT_STANDARD", boltStandard);
                 this.ModelTable.Rows.Add("BOLT_COMMENT", boltComment);
+            }
+
+            var rowsToDelete = this.ModelTable.AsEnumerable()
+                    .Where(row => string.IsNullOrWhiteSpace(row["Value"]?.ToString()))
+                    .ToList();
+
+            foreach (var row in rowsToDelete)
+            {
+                this.ModelTable.Rows.Remove(row);
             }
 
             this.ModelTable = this.ModelTable.DefaultView.ToTable(true);
@@ -207,6 +301,9 @@ namespace FilteringApp
             this.TexBoxUserInput.Select();
 
             mos.Select(new ArrayList(), false);
+
+            stopwatch.Stop();
+            this.statusBarLabel.Text = $"Application ready, time used in seconds: {stopwatch.Elapsed.TotalSeconds}";
         }
         private void Execute(BinaryFilterOperatorType binaryOperator)
         {

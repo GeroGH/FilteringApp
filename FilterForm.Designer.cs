@@ -33,7 +33,10 @@
             this.FilterAnd = new System.Windows.Forms.Button();
             this.ReuseOldFilter = new System.Windows.Forms.Button();
             this.TexBoxUserInput = new System.Windows.Forms.TextBox();
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.statusBarLabel = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
+            this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
             // dataGrid
@@ -90,11 +93,30 @@
             this.TexBoxUserInput.TabIndex = 4;
             this.TexBoxUserInput.TextChanged += new System.EventHandler(this.TexBoxUserInput_TextChanged);
             // 
+            // statusBar
+            // 
+            this.statusBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusBarLabel});
+            this.statusBar.Location = new System.Drawing.Point(5, 325);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.statusBar.Size = new System.Drawing.Size(542, 22);
+            this.statusBar.TabIndex = 5;
+            this.statusBar.Text = "statusBar";
+            // 
+            // statusBarLabel
+            // 
+            this.statusBarLabel.Name = "statusBarLabel";
+            this.statusBarLabel.Size = new System.Drawing.Size(135, 17);
+            this.statusBarLabel.Text = "Application Ready";
+            // 
             // FilteringApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(552, 326);
+            this.ClientSize = new System.Drawing.Size(552, 352);
+            this.Controls.Add(this.statusBar);
             this.Controls.Add(this.TexBoxUserInput);
             this.Controls.Add(this.ReuseOldFilter);
             this.Controls.Add(this.FilterAnd);
@@ -102,11 +124,14 @@
             this.Controls.Add(this.dataGrid);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FilteringApp";
+            this.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilteringApp 2025.03.31f";
+            this.Text = "FilteringApp 09.10.2025a";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FilerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -119,6 +144,8 @@
         private System.Windows.Forms.Button FilterAnd;
         private System.Windows.Forms.Button ReuseOldFilter;
         private System.Windows.Forms.TextBox TexBoxUserInput;
+        private System.Windows.Forms.StatusStrip statusBar;
+        private System.Windows.Forms.ToolStripStatusLabel statusBarLabel;
     }
 }
 
