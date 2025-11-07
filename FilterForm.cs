@@ -13,18 +13,17 @@ using Tekla.Structures.Model;
 using Tekla.Structures.Model.UI;
 using ModelObjectSelector = Tekla.Structures.Model.UI.ModelObjectSelector;
 
-
 namespace FilteringApp
 {
     public partial class FilteringApp : Form
     {
-        private readonly string FilterName = String.Empty;
+        private readonly string FilterName = string.Empty;
         private readonly string ModelFolder = string.Empty;
 
         private readonly List<Part> Parts = new List<Part>();
         private readonly List<BoltGroup> BoltGroups = new List<BoltGroup>();
 
-        private DataTable ModelTable = new DataTable();
+        private readonly DataTable ModelTable = new DataTable();
         private DataTable SelectionTable = new DataTable();
 
         public FilteringApp()
@@ -57,35 +56,19 @@ namespace FilteringApp
             var mos = new ModelObjectSelector();
             var moe = mos.GetSelectedObjects();
 
-            var parts = new List<Part>();
-            var bolts = new List<BoltGroup>();
-
-            var selectedModelObjects = new List<ModelObject>();
-            while (moe.MoveNext())
+            foreach (var item in moe)
             {
-                var current = moe.Current;
-                if (current != null)
-                    selectedModelObjects.Add(current);
-            }
-
-            foreach (var modelObject in selectedModelObjects)
-            {
-                var part = modelObject as Part;
-                if (part != null)
+                switch (item)
                 {
-                    parts.Add(part);
-                    continue;
-                }
+                    case BoltGroup bolt:
+                        this.BoltGroups.Add(bolt);
+                        break;
 
-                var bolt = modelObject as BoltGroup;
-                if (bolt != null)
-                {
-                    bolts.Add(bolt);
+                    case Part part:
+                        this.Parts.Add(part);
+                        break;
                 }
             }
-
-            this.Parts.AddRange(parts);
-            this.BoltGroups.AddRange(bolts);
 
             this.statusBarLabel.Text = "Collecting user fields from the parts ...";
 
@@ -266,27 +249,54 @@ namespace FilteringApp
 
             foreach (var boltGroup in this.BoltGroups)
             {
+                var name = string.Empty;
                 var boltStandard = string.Empty;
                 var boltComment = string.Empty;
+                var boltUf1 = string.Empty;
+                var boltUf2 = string.Empty;
 
+                boltGroup.GetReportProperty("NAME", ref name);
                 boltGroup.GetReportProperty("BOLT_STANDARD", ref boltStandard);
                 boltGroup.GetReportProperty("BOLT_COMMENT", ref boltComment);
+                boltGroup.GetReportProperty("BOLT_USERFIELD_1", ref boltUf1);
+                boltGroup.GetReportProperty("BOLT_USERFIELD_2", ref boltUf2);
 
+                this.ModelTable.Rows.Add("NAME", name);
                 this.ModelTable.Rows.Add("BOLT_STANDARD", boltStandard);
                 this.ModelTable.Rows.Add("BOLT_COMMENT", boltComment);
+                this.ModelTable.Rows.Add("BOLT_USERFIELD_1", boltUf1);
+                this.ModelTable.Rows.Add("BOLT_USERFIELD_2", boltUf2);
             }
 
-            var rowsToDelete = this.ModelTable.AsEnumerable()
-                    .Where(row => string.IsNullOrWhiteSpace(row["Value"]?.ToString()))
-                    .ToList();
+            var seen = new HashSet<string>();
 
-            foreach (var row in rowsToDelete)
+            var filteredSortedRows = this.ModelTable.AsEnumerable()
+                .Where(r =>
+                {
+                    var name = r["Name"]?.ToString();
+                    var value = r["Value"]?.ToString();
+
+                    if (string.IsNullOrWhiteSpace(value)) return false;
+
+                    var key = $"{name}|{value}";
+                    if (seen.Contains(key)) return false;
+
+                    seen.Add(key);
+                    return true;
+                })
+                .OrderBy(r => r["Name"]?.ToString())
+                .ThenBy(r => r["Value"]?.ToString())
+                .ToList();
+
+            for (var i = 0; i < filteredSortedRows.Count; i++)
             {
-                this.ModelTable.Rows.Remove(row);
+                this.ModelTable.Rows[i].ItemArray = filteredSortedRows[i].ItemArray;
             }
 
-            this.ModelTable = this.ModelTable.DefaultView.ToTable(true);
-            this.ModelTable.DefaultView.Sort = "Name, Value";
+            while (this.ModelTable.Rows.Count > filteredSortedRows.Count)
+            {
+                this.ModelTable.Rows.RemoveAt(this.ModelTable.Rows.Count - 1);
+            }
 
             this.SelectionTable = this.ModelTable.Clone();
 
@@ -294,6 +304,7 @@ namespace FilteringApp
             this.dataGrid.RowHeadersVisible = false;
             this.dataGrid.AllowUserToResizeRows = false;
             this.dataGrid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.dataGrid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             this.dataGrid.AllowUserToAddRows = false;
             this.dataGrid.ReadOnly = true;
             this.dataGrid.ColumnHeadersVisible = true;
@@ -303,7 +314,7 @@ namespace FilteringApp
             mos.Select(new ArrayList(), false);
 
             stopwatch.Stop();
-            this.statusBarLabel.Text = $"Application ready, time used in seconds: {stopwatch.Elapsed.TotalSeconds}";
+            this.statusBarLabel.Text = $"Application ready.\t Part Filtered [{this.Parts.Count + this.BoltGroups.Count}]\t Unique Fields [{this.dataGrid.Rows.Count}]\t Time [{stopwatch.Elapsed.TotalSeconds:F3}]";
         }
         private void Execute(BinaryFilterOperatorType binaryOperator)
         {
@@ -375,6 +386,7 @@ namespace FilteringApp
         private void TexBoxUserInput_TextChanged(object sender, EventArgs e)
         {
             this.ModelTable.DefaultView.RowFilter = string.Format($"[Name] LIKE '%{this.TexBoxUserInput.Text}%' OR [Value] LIKE '%{this.TexBoxUserInput.Text}%'");
+            this.statusBarLabel.Text = $"Application ready.\t Unique Fields [{this.dataGrid.Rows.Count}]";
         }
     }
 }

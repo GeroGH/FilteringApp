@@ -124,9 +124,9 @@
             this.Controls.Add(this.dataGrid);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "FilteringApp";
-            this.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.Padding = new System.Windows.Forms.Padding(5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilteringApp 09.10.2025a";
+            this.Text = "FilteringApp 07.11.2025a";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FilerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
