@@ -1,4 +1,4 @@
-﻿namespace FilteringApp
+﻿namespace FilteringApp.UI
 {
     partial class FilteringApp
     {

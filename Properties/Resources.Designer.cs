@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FilteringApp.Properties
+namespace FilteringAppForm.Properties
 {
 
 

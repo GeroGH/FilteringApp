@@ -67,16 +67,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FilterForm.cs">
+    <Compile Include="Core\AttributePair.cs" />
+    <Compile Include="Core\BoltPropertyExtractor.cs" />
+    <Compile Include="Core\IModelObjectProvider.cs" />
+    <Compile Include="Core\IPropertyExtractor.cs" />
+    <Compile Include="Core\ModelDataCollector.cs" />
+    <Compile Include="Core\ModelObjectProvider.cs" />
+    <Compile Include="Core\PartPropertyExtractor.cs" />
+    <Compile Include="UI\FilteringAppForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FilterForm.Designer.cs">
-      <DependentUpon>FilterForm.cs</DependentUpon>
+    <Compile Include="UI\FilteringAppForm.Designer.cs">
+      <DependentUpon>FilteringAppForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Filtering\FilterBuilder.cs" />
+    <Compile Include="Filtering\IFilterBuilder.cs" />
+    <Compile Include="Filtering\IViewUpdater.cs" />
+    <Compile Include="Filtering\ViewUpdater.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FilterForm.resx">
-      <DependentUpon>FilterForm.cs</DependentUpon>
+    <EmbeddedResource Include="UI\FilteringAppForm.resx">
+      <DependentUpon>FilteringAppForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -119,5 +130,6 @@
     <Content Include="Resources\prtyp_tree_8.bmp" />
     <Content Include="Resources\prtyp_tree_9.bmp" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
