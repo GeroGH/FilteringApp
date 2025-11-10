@@ -79,6 +79,13 @@ namespace FilteringApp.UI
                 // === Deselect all parts in the Tekla model ===
                 this.viewUpdater.ClearTeklaSelection();
 
+                var settings = new UserSettingsStorage();
+                if (settings.IsReady)
+                {
+                    settings.LoadSettings(out var savedText, out var savedViewFilter);
+                    this.TexBoxUserInput.Text = savedText;
+                }
+
                 this.statusBarLabel.Text = $"Application ready. Objects: {this.dataCollector.LastPartsCount + this.dataCollector.LastBoltGroupsCount} Attributes: {this.modelTable.Rows.Count} Time: {sw.Elapsed.TotalSeconds:F3}s";
             }
             catch (Exception ex)
@@ -130,6 +137,10 @@ namespace FilteringApp.UI
 
             // === Apply filter to visible Tekla views ===
             this.viewUpdater.ApplyRepresentation(this.filterName);
+
+            var settings = new UserSettingsStorage();
+            if (settings.IsReady)
+                settings.SaveSettings(this.TexBoxUserInput.Text, this.filterName);
         }
 
         /// <summary>
@@ -174,6 +185,16 @@ namespace FilteringApp.UI
                 string.Format("[Name] LIKE '%{0}%' OR [Value] LIKE '%{0}%'", txt);
 
             this.statusBarLabel.Text = $"Filtered view: {this.dataGrid.Rows.Count} visible items";
+
+            var settings = new UserSettingsStorage();
+            if (settings.IsReady)
+                settings.SaveSettings(this.TexBoxUserInput.Text, this.filterName);
+        }
+        private void FilteringApp_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var settings = new UserSettingsStorage();
+            if (settings.IsReady)
+                settings.SaveSettings(this.TexBoxUserInput.Text, this.filterName);
         }
     }
 }
