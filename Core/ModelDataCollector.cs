@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using Tekla.Structures.Model;
 
 namespace FilteringApp.Core
@@ -23,7 +22,7 @@ namespace FilteringApp.Core
                                   IPropertyExtractor partExtractor,
                                   IPropertyExtractor boltExtractor)
         {
-            objectProvider = provider;
+            this.objectProvider = provider;
             this.partExtractor = partExtractor;
             this.boltExtractor = boltExtractor;
         }
@@ -35,7 +34,7 @@ namespace FilteringApp.Core
         /// </summary>
         public DataTable CollectSelectedAttributes()
         {
-            var enumerator = objectProvider.GetSelectedObjects();
+            var enumerator = this.objectProvider.GetSelectedObjects();
             var parts = new List<Part>();
             var bolts = new List<BoltGroup>();
 
@@ -47,18 +46,18 @@ namespace FilteringApp.Core
                 else if (e.Current is BoltGroup b) bolts.Add(b);
             }
 
-            LastPartsCount = parts.Count;
-            LastBoltGroupsCount = bolts.Count;
+            this.LastPartsCount = parts.Count;
+            this.LastBoltGroupsCount = bolts.Count;
 
             var attributes = new List<AttributePair>(parts.Count * 10 + bolts.Count * 5);
 
             // Extract all attributes from parts
             foreach (var p in parts)
-                attributes.AddRange(partExtractor.Extract(p));
+                attributes.AddRange(this.partExtractor.Extract(p));
 
             // Extract all attributes from bolt groups
             foreach (var b in bolts)
-                attributes.AddRange(boltExtractor.Extract(b));
+                attributes.AddRange(this.boltExtractor.Extract(b));
 
             // Deduplicate on (Name, Value)
             var seen = new HashSet<string>(StringComparer.Ordinal);

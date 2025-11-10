@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using FilteringApp.Core;
 using Tekla.Structures.Filtering;
 using Tekla.Structures.Filtering.Categories;
-using FilteringApp.Core;
 
 namespace FilteringApp.Filtering
 {
@@ -51,7 +51,7 @@ namespace FilteringApp.Filtering
             // Build the final filter object and write to Tekla model attributes folder
             var filter = new Filter(collection);
 
-            var attrFolder = Path.Combine(modelFolder, ".\\attributes");
+            var attrFolder = Path.Combine(this.modelFolder, ".\\attributes");
             if (!Directory.Exists(attrFolder))
             {
                 try { Directory.CreateDirectory(attrFolder); }

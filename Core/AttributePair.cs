@@ -18,10 +18,10 @@ namespace FilteringApp.Core
 
         public AttributePair(string name, string value)
         {
-            Name = name;
-            Value = value ?? string.Empty;
+            this.Name = name;
+            this.Value = value ?? string.Empty;
         }
 
-        public override string ToString() => $"{Name} = {Value}";
+        public override string ToString() => $"{this.Name} = {this.Value}";
     }
 }
