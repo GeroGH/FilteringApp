@@ -65,7 +65,7 @@ namespace FilteringApp.UI
             {
                 // Adjust form position slightly so it doesn't overlap Tekla main window
                 var pos = this.Location;
-                this.Location = new Point(pos.X + 610, pos.Y - 200);
+                this.Location = new Point(pos.X + 610, pos.Y - 150);
                 this.Show();
 
                 this.statusBarLabel.Text = "Collecting model data...";
