@@ -63,11 +63,11 @@
             // 
             this.FilterOr.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FilterOr.ForeColor = System.Drawing.Color.Firebrick;
-            this.FilterOr.Location = new System.Drawing.Point(11, 92);
+            this.FilterOr.Location = new System.Drawing.Point(11, 19);
             this.FilterOr.Name = "FilterOr";
             this.FilterOr.Size = new System.Drawing.Size(146, 68);
             this.FilterOr.TabIndex = 1;
-            this.FilterOr.Text = "OR";
+            this.FilterOr.Text = "Operator - \"OR\"\r\n(default)";
             this.FilterOr.UseVisualStyleBackColor = true;
             this.FilterOr.Click += new System.EventHandler(this.FilterOr_Click);
             // 
@@ -75,23 +75,23 @@
             // 
             this.FilterAnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FilterAnd.ForeColor = System.Drawing.Color.DodgerBlue;
-            this.FilterAnd.Location = new System.Drawing.Point(11, 19);
+            this.FilterAnd.Location = new System.Drawing.Point(11, 92);
             this.FilterAnd.Name = "FilterAnd";
             this.FilterAnd.Size = new System.Drawing.Size(146, 68);
             this.FilterAnd.TabIndex = 2;
-            this.FilterAnd.Text = "AND";
+            this.FilterAnd.Text = "Operator - \"AND\"";
             this.FilterAnd.UseVisualStyleBackColor = true;
             this.FilterAnd.Click += new System.EventHandler(this.FilterAnd_Click);
             // 
             // ReuseAppViewFilter
             // 
             this.ReuseAppViewFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReuseAppViewFilter.ForeColor = System.Drawing.Color.LightSeaGreen;
+            this.ReuseAppViewFilter.ForeColor = System.Drawing.Color.Black;
             this.ReuseAppViewFilter.Location = new System.Drawing.Point(11, 19);
             this.ReuseAppViewFilter.Name = "ReuseAppViewFilter";
             this.ReuseAppViewFilter.Size = new System.Drawing.Size(146, 68);
             this.ReuseAppViewFilter.TabIndex = 3;
-            this.ReuseAppViewFilter.Text = "Application";
+            this.ReuseAppViewFilter.Text = "App View Filter";
             this.ReuseAppViewFilter.UseVisualStyleBackColor = true;
             this.ReuseAppViewFilter.Click += new System.EventHandler(this.ReuseOldFilter_Click);
             // 
@@ -130,7 +130,7 @@
             this.groupBox1.Size = new System.Drawing.Size(580, 49);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Filter by text:";
+            this.groupBox1.Text = "Filtering by User text input:";
             // 
             // groupBox2
             // 
@@ -140,7 +140,7 @@
             this.groupBox2.Size = new System.Drawing.Size(411, 340);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Table values:";
+            this.groupBox2.Text = "Selection Table:";
             // 
             // groupBox3
             // 
@@ -151,7 +151,7 @@
             this.groupBox3.Size = new System.Drawing.Size(163, 167);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Representations:";
+            this.groupBox3.Text = "View Filters:";
             // 
             // ReuseUserViewFilter
             // 
@@ -161,7 +161,7 @@
             this.ReuseUserViewFilter.Name = "ReuseUserViewFilter";
             this.ReuseUserViewFilter.Size = new System.Drawing.Size(146, 68);
             this.ReuseUserViewFilter.TabIndex = 4;
-            this.ReuseUserViewFilter.Text = "User";
+            this.ReuseUserViewFilter.Text = "User View Filter";
             this.ReuseUserViewFilter.UseVisualStyleBackColor = true;
             this.ReuseUserViewFilter.Click += new System.EventHandler(this.ReuseUserViewFilter_Click);
             // 
@@ -174,7 +174,7 @@
             this.groupBox4.Size = new System.Drawing.Size(163, 167);
             this.groupBox4.TabIndex = 9;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Logic operators:";
+            this.groupBox4.Text = "Logical operators:";
             // 
             // FilteringApp
             // 
