@@ -31,14 +31,14 @@
             this.dataGrid = new Tekla.Structures.Dialog.UIControls.DataGrid();
             this.FilterOr = new System.Windows.Forms.Button();
             this.FilterAnd = new System.Windows.Forms.Button();
-            this.ReuseOldFilter = new System.Windows.Forms.Button();
+            this.ReuseAppViewFilter = new System.Windows.Forms.Button();
             this.TexBoxUserInput = new System.Windows.Forms.TextBox();
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusBarLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.ReuseUserViewFilter = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).BeginInit();
             this.statusBar.SuspendLayout();
@@ -83,17 +83,17 @@
             this.FilterAnd.UseVisualStyleBackColor = true;
             this.FilterAnd.Click += new System.EventHandler(this.FilterAnd_Click);
             // 
-            // ReuseOldFilter
+            // ReuseAppViewFilter
             // 
-            this.ReuseOldFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReuseOldFilter.ForeColor = System.Drawing.Color.LightSeaGreen;
-            this.ReuseOldFilter.Location = new System.Drawing.Point(11, 19);
-            this.ReuseOldFilter.Name = "ReuseOldFilter";
-            this.ReuseOldFilter.Size = new System.Drawing.Size(146, 68);
-            this.ReuseOldFilter.TabIndex = 3;
-            this.ReuseOldFilter.Text = "Application";
-            this.ReuseOldFilter.UseVisualStyleBackColor = true;
-            this.ReuseOldFilter.Click += new System.EventHandler(this.ReuseOldFilter_Click);
+            this.ReuseAppViewFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReuseAppViewFilter.ForeColor = System.Drawing.Color.LightSeaGreen;
+            this.ReuseAppViewFilter.Location = new System.Drawing.Point(11, 19);
+            this.ReuseAppViewFilter.Name = "ReuseAppViewFilter";
+            this.ReuseAppViewFilter.Size = new System.Drawing.Size(146, 68);
+            this.ReuseAppViewFilter.TabIndex = 3;
+            this.ReuseAppViewFilter.Text = "Application";
+            this.ReuseAppViewFilter.UseVisualStyleBackColor = true;
+            this.ReuseAppViewFilter.Click += new System.EventHandler(this.ReuseOldFilter_Click);
             // 
             // TexBoxUserInput
             // 
@@ -144,8 +144,8 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Controls.Add(this.ReuseOldFilter);
+            this.groupBox3.Controls.Add(this.ReuseUserViewFilter);
+            this.groupBox3.Controls.Add(this.ReuseAppViewFilter);
             this.groupBox3.Location = new System.Drawing.Point(425, 72);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(163, 167);
@@ -153,16 +153,17 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Representations:";
             // 
-            // button1
+            // ReuseUserViewFilter
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.DarkGreen;
-            this.button1.Location = new System.Drawing.Point(11, 93);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(146, 68);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "User";
-            this.button1.UseVisualStyleBackColor = true;
+            this.ReuseUserViewFilter.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReuseUserViewFilter.ForeColor = System.Drawing.Color.DarkGreen;
+            this.ReuseUserViewFilter.Location = new System.Drawing.Point(11, 93);
+            this.ReuseUserViewFilter.Name = "ReuseUserViewFilter";
+            this.ReuseUserViewFilter.Size = new System.Drawing.Size(146, 68);
+            this.ReuseUserViewFilter.TabIndex = 4;
+            this.ReuseUserViewFilter.Text = "User";
+            this.ReuseUserViewFilter.UseVisualStyleBackColor = true;
+            this.ReuseUserViewFilter.Click += new System.EventHandler(this.ReuseUserViewFilter_Click);
             // 
             // groupBox4
             // 
@@ -210,14 +211,14 @@
         private Tekla.Structures.Dialog.UIControls.DataGrid dataGrid;
         private System.Windows.Forms.Button FilterOr;
         private System.Windows.Forms.Button FilterAnd;
-        private System.Windows.Forms.Button ReuseOldFilter;
+        private System.Windows.Forms.Button ReuseAppViewFilter;
         private System.Windows.Forms.TextBox TexBoxUserInput;
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel statusBarLabel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button ReuseUserViewFilter;
         private System.Windows.Forms.GroupBox groupBox4;
     }
 }

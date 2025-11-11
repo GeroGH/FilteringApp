@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using FilteringApp.Core;
 using FilteringApp.Filtering;
+using FilteringApp.UserData;
 using Tekla.Structures.Filtering;
 using Tekla.Structures.Model;
 
@@ -23,6 +24,7 @@ namespace FilteringApp.UI
         private readonly ModelDataCollector dataCollector;
         private readonly IFilterBuilder filterBuilder;
         private readonly IViewUpdater viewUpdater;
+        private readonly string Initials;
 
         // Local DataTables for UI state
         private DataTable modelTable;
@@ -47,11 +49,11 @@ namespace FilteringApp.UI
             // Generate unique filter name from user initials to avoid collisions
             var userName = Environment.UserName ?? string.Empty;
             var parts = userName.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            var initials = parts.Length >= 2
+            this.Initials = parts.Length >= 2
                 ? (char.ToUpper(parts[0][0]).ToString() + char.ToUpper(parts[1][0]).ToString())
                 : "XX";
 
-            this.filterName = "FilteringAppFilter" + initials;
+            this.filterName = "FilteringAppFilter" + this.Initials;
         }
 
         /// <summary>
@@ -63,6 +65,10 @@ namespace FilteringApp.UI
 
             try
             {
+                var provider = new TeklaModelPathProvider();
+                UserSettingsStorage.Initialize(provider, this.Initials);
+
+
                 // Adjust form position slightly so it doesn't overlap Tekla main window
                 var pos = this.Location;
                 this.Location = new Point(pos.X + 610, pos.Y - 150);
@@ -76,15 +82,10 @@ namespace FilteringApp.UI
                 // === Bind the results to the DataGrid ===
                 this.SetupDataGrid(this.modelTable);
 
+                this.TexBoxUserInput.Text = UserSettingsStorage.LoadTextBoxValue();
+
                 // === Deselect all parts in the Tekla model ===
                 this.viewUpdater.ClearTeklaSelection();
-
-                var settings = new UserSettingsStorage();
-                if (settings.IsReady)
-                {
-                    settings.LoadSettings(out var savedText, out var savedViewFilter);
-                    this.TexBoxUserInput.Text = savedText;
-                }
 
                 this.statusBarLabel.Text = $"Application ready. Objects: {this.dataCollector.LastPartsCount + this.dataCollector.LastBoltGroupsCount} Attributes: {this.modelTable.Rows.Count} Time: {sw.Elapsed.TotalSeconds:F3}s";
             }
@@ -125,6 +126,9 @@ namespace FilteringApp.UI
         /// </summary>
         private void Execute(BinaryFilterOperatorType binaryOperator)
         {
+            var activeViewName = ModelViewProvider.GetUserViewFilter();
+            UserSettingsStorage.SaveViewFilter(activeViewName);
+
             this.CollectSelectedRows();
 
             // Convert selected DataGridView rows to AttributePair objects
@@ -137,10 +141,6 @@ namespace FilteringApp.UI
 
             // === Apply filter to visible Tekla views ===
             this.viewUpdater.ApplyRepresentation(this.filterName);
-
-            var settings = new UserSettingsStorage();
-            if (settings.IsReady)
-                settings.SaveSettings(this.TexBoxUserInput.Text, this.filterName);
         }
 
         /// <summary>
@@ -164,16 +164,29 @@ namespace FilteringApp.UI
         // === UI Event Handlers ===
 
         private void FilterOr_Click(object sender, EventArgs e)
-            => this.Execute(BinaryFilterOperatorType.BOOLEAN_OR);
+        {
+            this.Execute(BinaryFilterOperatorType.BOOLEAN_OR);
+        }
 
         private void FilterAnd_Click(object sender, EventArgs e)
-            => this.Execute(BinaryFilterOperatorType.BOOLEAN_AND);
+        {
+            this.Execute(BinaryFilterOperatorType.BOOLEAN_AND);
+        }
 
         private void DataGrid_Click(object sender, EventArgs e)
-            => this.Execute(BinaryFilterOperatorType.BOOLEAN_OR);
+        {
+            this.Execute(BinaryFilterOperatorType.BOOLEAN_OR);
+        }
 
         private void ReuseOldFilter_Click(object sender, EventArgs e)
-            => this.viewUpdater.ApplyRepresentation(this.filterName);
+        {
+            this.viewUpdater.ApplyRepresentation(this.filterName);
+        }
+        private void ReuseUserViewFilter_Click(object sender, EventArgs e)
+        {
+            var savedFilter = UserSettingsStorage.LoadViewFilter();
+            this.viewUpdater.ApplyRepresentation(savedFilter);
+        }
 
         /// <summary>
         /// Filters the displayed attributes dynamically as the user types in the search box.
@@ -186,15 +199,7 @@ namespace FilteringApp.UI
 
             this.statusBarLabel.Text = $"Filtered view: {this.dataGrid.Rows.Count} visible items";
 
-            var settings = new UserSettingsStorage();
-            if (settings.IsReady)
-                settings.SaveSettings(this.TexBoxUserInput.Text, this.filterName);
-        }
-        private void FilteringApp_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            var settings = new UserSettingsStorage();
-            if (settings.IsReady)
-                settings.SaveSettings(this.TexBoxUserInput.Text, this.filterName);
+            UserSettingsStorage.SaveTextBoxValue(this.TexBoxUserInput.Text);
         }
     }
 }
