@@ -27,7 +27,6 @@ namespace FilteringApp.UI
 
         private DataTable modelTable;
         private DataTable selectionTable;
-
         public FilteringApp()
         {
             this.InitializeComponent();
@@ -63,6 +62,7 @@ namespace FilteringApp.UI
             {
                 // === Show form immediately ===
                 this.Show();
+                this.SetLoadingState(true);
                 this.statusBarLabel.Text = "Initializing...";
 
                 // Initialize user settings
@@ -98,7 +98,7 @@ namespace FilteringApp.UI
                                    (this.dataCollector?.LastBoltGroupsCount ?? 0);
                 var attributesCount = this.modelTable?.Rows?.Count ?? 0;
                 this.statusBarLabel.Text =
-                    $"Application ready — {objectsCount} objects, {attributesCount} attributes. Time: {sw.Elapsed.TotalSeconds:F2}s";
+                    $"Application ready - {objectsCount} objects, {attributesCount} attributes. Time: {sw.Elapsed.TotalSeconds:F2}s";
             }
             catch (Exception ex)
             {
@@ -109,6 +109,7 @@ namespace FilteringApp.UI
             finally
             {
                 sw.Stop();
+                this.SetLoadingState(false);
             }
         }
 
@@ -248,6 +249,27 @@ namespace FilteringApp.UI
 
             this.statusBarLabel.Text = $"Filtered view: {this.dataGrid.Rows.Count} items";
             UserSettingsStorage.SaveTextBoxValue(this.TexBoxUserInput.Text);
+        }
+        private void SetLoadingState(bool isLoading)
+        {
+            if (isLoading)
+            {
+                this.TexBoxUserInput.Enabled = false;
+                this.dataGrid.Enabled = false;
+                this.ReuseAppViewFilter.Enabled = false;
+                this.ReuseUserViewFilter.Enabled = false;
+                this.FilterOr.Enabled = false;
+                this.FilterAnd.Enabled = false;
+            }
+            else
+            {
+                this.dataGrid.Enabled = true;
+                this.TexBoxUserInput.Enabled = true;
+                this.ReuseAppViewFilter.Enabled = true;
+                this.ReuseUserViewFilter.Enabled = true;
+                this.FilterOr.Enabled = true;
+                this.FilterAnd.Enabled = true;
+            }
         }
     }
 }

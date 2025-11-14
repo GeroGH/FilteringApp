@@ -55,7 +55,7 @@
             this.dataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGrid.Location = new System.Drawing.Point(6, 19);
             this.dataGrid.Name = "dataGrid";
-            this.dataGrid.Size = new System.Drawing.Size(405, 314);
+            this.dataGrid.Size = new System.Drawing.Size(399, 315);
             this.dataGrid.TabIndex = 0;
             this.dataGrid.Click += new System.EventHandler(this.DataGrid_Click);
             // 
@@ -130,7 +130,7 @@
             this.groupBox1.Size = new System.Drawing.Size(580, 49);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Filtering by User text input:";
+            this.groupBox1.Text = "User text input:";
             // 
             // groupBox2
             // 
@@ -190,7 +190,7 @@
             this.Name = "FilteringApp";
             this.Padding = new System.Windows.Forms.Padding(5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilteringApp 11.11.2025a";
+            this.Text = "FilteringApp 14.11.2025a";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FilerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();
