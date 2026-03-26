@@ -67,7 +67,7 @@
             this.FilterOr.Name = "FilterOr";
             this.FilterOr.Size = new System.Drawing.Size(146, 68);
             this.FilterOr.TabIndex = 1;
-            this.FilterOr.Text = "Operator - \"OR\"\r\n(default)";
+            this.FilterOr.Text = "OR";
             this.FilterOr.UseVisualStyleBackColor = true;
             this.FilterOr.Click += new System.EventHandler(this.FilterOr_Click);
             // 
@@ -79,7 +79,7 @@
             this.FilterAnd.Name = "FilterAnd";
             this.FilterAnd.Size = new System.Drawing.Size(146, 68);
             this.FilterAnd.TabIndex = 2;
-            this.FilterAnd.Text = "Operator - \"AND\"";
+            this.FilterAnd.Text = "AND";
             this.FilterAnd.UseVisualStyleBackColor = true;
             this.FilterAnd.Click += new System.EventHandler(this.FilterAnd_Click);
             // 
@@ -91,7 +91,7 @@
             this.ReuseAppViewFilter.Name = "ReuseAppViewFilter";
             this.ReuseAppViewFilter.Size = new System.Drawing.Size(146, 68);
             this.ReuseAppViewFilter.TabIndex = 3;
-            this.ReuseAppViewFilter.Text = "App View Filter";
+            this.ReuseAppViewFilter.Text = "App Filter";
             this.ReuseAppViewFilter.UseVisualStyleBackColor = true;
             this.ReuseAppViewFilter.Click += new System.EventHandler(this.ReuseOldFilter_Click);
             // 
@@ -161,7 +161,7 @@
             this.ReuseUserViewFilter.Name = "ReuseUserViewFilter";
             this.ReuseUserViewFilter.Size = new System.Drawing.Size(146, 68);
             this.ReuseUserViewFilter.TabIndex = 4;
-            this.ReuseUserViewFilter.Text = "User View Filter";
+            this.ReuseUserViewFilter.Text = "User Filter";
             this.ReuseUserViewFilter.UseVisualStyleBackColor = true;
             this.ReuseUserViewFilter.Click += new System.EventHandler(this.ReuseUserViewFilter_Click);
             // 
@@ -190,7 +190,7 @@
             this.Name = "FilteringApp";
             this.Padding = new System.Windows.Forms.Padding(5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilteringApp 14.11.2025a";
+            this.Text = "FilteringApp 26.03.2026a";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FilerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();

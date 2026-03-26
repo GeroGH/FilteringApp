@@ -15,8 +15,8 @@ namespace FilteringApp.Core
         private static readonly string[] blacklistSubstrings = new[]
         {
             "SectionSize","PROFILE1","initial_GUID","initial_profile","FIRE_RATING","PRELIM_MARK",
-            "SDNF_MEMBER_NUMBER","proIfcEntityOvrd","proIfcEntityPreDef","ENVIRONMENT","USE",
-            "EN1090_EXC_PART","OUTPUT_ZONE","CELL_UTILIZATION","RFI"
+            "SDNF_MEMBER_NUMBER","proIfcEntityOvrd","proIfcEntityPreDef","ENVIRONMENT","USE"
+            ,"OUTPUT_ZONE","CELL_UTILIZATION","RFI"
         };
 
         public IEnumerable<AttributePair> Extract(ModelObject modelObject)
@@ -51,7 +51,8 @@ namespace FilteringApp.Core
                 {
                 "USER_FIELD_1","USER_FIELD_2","USER_FIELD_3","USER_FIELD_4",
                 "PHASE.NAME","USER_PHASE","MATERIAL_TYPE","ASSY_STATUS",
-                "PART_PREFIX","ASSEMBLY_PREFIX","ASSEMBLY_DEFAULT_PREFIX","FIRE_PRODUCT"
+                "PART_PREFIX","ASSEMBLY_PREFIX","ASSEMBLY_DEFAULT_PREFIX","FIRE_PRODUCT",
+                "EN1090_EXC_PART"
             };
 
                 foreach (var key in keys)

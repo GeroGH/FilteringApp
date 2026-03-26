@@ -44,9 +44,7 @@ namespace FilteringApp.UI
             // Generate initials (fallback if not available)
             var userName = Environment.UserName ?? "user";
             var parts = userName.Split('.');
-            this.initials = parts.Length >= 2
-                ? $"{char.ToUpper(parts[0][0])}{char.ToUpper(parts[1][0])}"
-                : "XX";
+            this.initials = parts.Length >= 2 ? $"{char.ToUpper(parts[0][0])}{char.ToUpper(parts[1][0])}" : "XX";
 
             this.filterName = $"FilteringAppFilter{this.initials}";
         }
@@ -70,8 +68,9 @@ namespace FilteringApp.UI
                 UserSettingsStorage.Initialize(provider, this.initials);
 
                 // Adjust UI position slightly to avoid overlapping Tekla window
-                var pos = this.Location;
-                this.Location = new Point(pos.X + 610, pos.Y - 150);
+                var currentScreen = Screen.FromPoint(Cursor.Position);
+                var workingArea = currentScreen.WorkingArea;
+                this.Location = new Point(workingArea.Right - this.Width - 50, workingArea.Top + 150);
 
                 // === Collect model data asynchronously ===
                 this.statusBarLabel.Text = "Collecting model data from Tekla...";
