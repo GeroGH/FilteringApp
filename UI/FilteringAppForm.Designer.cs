@@ -190,7 +190,7 @@
             this.Name = "FilteringApp";
             this.Padding = new System.Windows.Forms.Padding(5);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FilteringApp 26.03.2026a";
+            this.Text = "FilteringApp 15.04.2026b";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FilerForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGrid)).EndInit();

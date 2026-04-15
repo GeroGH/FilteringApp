@@ -63,10 +63,6 @@ namespace FilteringApp.UI
                 this.SetLoadingState(true);
                 this.statusBarLabel.Text = "Initializing...";
 
-                // Initialize user settings
-                var provider = new TeklaModelPathProvider();
-                UserSettingsStorage.Initialize(provider, this.initials);
-
                 // Adjust UI position slightly to avoid overlapping Tekla window
                 var currentScreen = Screen.FromPoint(Cursor.Position);
                 var workingArea = currentScreen.WorkingArea;

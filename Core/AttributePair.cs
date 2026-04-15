@@ -21,7 +21,5 @@ namespace FilteringApp.Core
             this.Name = name;
             this.Value = value ?? string.Empty;
         }
-
-        public override string ToString() => $"{this.Name} = {this.Value}";
     }
 }
