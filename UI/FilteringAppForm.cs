@@ -81,8 +81,8 @@ namespace FilteringApp.UI
                 this.statusBarLabel.Text = "Setting up data grid...";
                 this.SetupDataGrid(this.modelTable);
 
-                // Load last user input into the search box
-                this.TexBoxUserInput.Text = UserSettingsStorage.LoadTextBoxValue() ?? string.Empty;
+                this.TexBoxUserInput.Text = UserSettingsStorage.LoadTextBoxValue();
+                this.ApplyTextFilter(UserSettingsStorage.LoadTextBoxValue());
 
                 // Clear Tekla selection (can run async if slow)
                 this.statusBarLabel.Text = "Clearing Tekla selection...";
@@ -236,15 +236,23 @@ namespace FilteringApp.UI
 
         private void TexBoxUserInput_TextChanged(object sender, EventArgs e)
         {
+            var text = this.TexBoxUserInput.Text;
+            this.ApplyTextFilter(text);
+            UserSettingsStorage.SaveTextBoxValue(this.TexBoxUserInput.Text);
+        }
+
+        private void ApplyTextFilter(string text)
+        {
             if (this.modelTable == null) return;
 
-            var txt = this.TexBoxUserInput.Text.Replace("'", "''");
+            var txt = text.Replace("'", "''");
+
             this.modelTable.DefaultView.RowFilter =
                 $"[Name] LIKE '%{txt}%' OR [Value] LIKE '%{txt}%'";
 
             this.statusBarLabel.Text = $"Filtered view: {this.dataGrid.Rows.Count} items";
-            UserSettingsStorage.SaveTextBoxValue(this.TexBoxUserInput.Text);
         }
+
         private void SetLoadingState(bool isLoading)
         {
             if (isLoading)

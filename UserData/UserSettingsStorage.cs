@@ -5,11 +5,13 @@ namespace FilteringApp.UserData
         public static void SaveTextBoxValue(string textBoxValue)
         {
             Properties.Settings.Default.UserInput = textBoxValue;
+            Properties.Settings.Default.Save();
         }
 
         public static void SaveViewFilter(string viewFilter)
         {
             Properties.Settings.Default.UserViewFilter = viewFilter;
+            Properties.Settings.Default.Save();
         }
 
         public static string LoadTextBoxValue()
